@@ -5,8 +5,9 @@
 The main file which executes the program
 """
 
-from services.database import Database
+from services.readjson import Readjson
+from model.activite import Activite
 
-db = Database("data/installations.db", "installations")
-db.createNew()
-db.close()
+rj = Readjson("data/Activites.json")
+rj.read()
+print(rj.getResult())
