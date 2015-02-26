@@ -7,6 +7,11 @@ Model for an installation
 
 class Installation:
 
-    def __init__(self, numero, nom):
-        self.numero = numero
-        self.nom = nom
+    def __init__(self, number, name, address, zipCode, city, latitude, longitude):
+        self.number = number
+        self.name = name
+        self.address = address
+        self.zipCode = zipCode
+        self.city = city
+        self.latitude = latitude
+        self.longitude = longitude
