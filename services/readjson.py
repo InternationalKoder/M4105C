@@ -21,7 +21,7 @@ class ReadJSON:
         data = json.load(file)
 
         for line in data["data"]:
-            self.result.append(Activity(line["EquipementId"], line["ActLib"]))
+            self.result.append(Activity(line["ActCode"], line["ActLib"], line["EquipementId"]))
 
 
     def readEquipments(self, path):

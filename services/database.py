@@ -21,13 +21,19 @@ class Database:
         c = self.conn.cursor()
 
         c.execute("DROP TABLE IF EXISTS installations")
-        c.execute("CREATE TABLE installations(numero INTEGER, nom VARCHAR, adresse VARCHAR, code_postal VARCHAR, ville VARCHAR, latitude DECIMAL, longitude DECIMAL)")
+        c.execute("CREATE TABLE installations(numero INTEGER PRIMARY KEY, nom VARCHAR, adresse VARCHAR, code_postal VARCHAR, ville VARCHAR, latitude DECIMAL, longitude DECIMAL)")
 
         c.execute("DROP TABLE IF EXISTS equipements")
-        c.execute("CREATE TABLE equipements(numero INTEGER, nom VARCHAR, numero_installation VARCHAR)")
+        c.execute("CREATE TABLE equipements(numero INTEGER PRIMARY KEY, nom VARCHAR, numero_installation VARCHAR, FOREIGN KEY(numero_installation) REFERENCES installations(numero))")
 
         c.execute("DROP TABLE IF EXISTS activites")
-        c.execute("CREATE TABLE activites(numero INTEGER, nom VARCHAR)")
+        c.execute("CREATE TABLE activites(numero INTEGER PRIMARY KEY, nom VARCHAR)")
+
+        c.execute("DROP TABLE IF EXISTS activites_temp")
+        c.execute("CREATE TABLE activites_temp(numero INTEGER, nom VARCHAR, numero_equipement INTEGER)")
+
+        c.execute("DROP TABLE IF EXISTS equipements_activites")
+        c.execute("CREATE TABLE equipements_activites(numero_equipement INTEGER, numero_activite INTEGER, FOREIGN KEY(numero_equipement) REFERENCES equipements(numero), FOREIGN KEY(numero_activite) REFERENCES activites(numero))")
         
         self.commit()
 
@@ -52,11 +58,22 @@ class Database:
 
     def insertActivity(self, activ):
         """
-        Inserts an activity in the 'activites' table
+        Inserts an activity in the 'activites_temp' table
+        You must call this method for all the lines you want to insert, and then call the 'writeActivities' method to finish the insertion
         """
         c = self.conn.cursor()
-        c.execute('INSERT INTO activites VALUES(:number, :name)',
-                  {'number':activ.number, 'name':activ.name})
+        c.execute('INSERT INTO activites_temp VALUES(:number, :name, :numberEquipment)',
+                  {'number':activ.number, 'name':activ.name, 'numberEquipment':activ.numberEquipment})
+
+
+    def writeActivities(self):
+        """
+        Writes all the activities from 'activites_temp' to 'activites'
+        """
+        c = self.conn.cursor()
+        c.execute('INSERT INTO activites(numero, nom) SELECT numero, nom FROM activites_temp GROUP BY numero')
+        c.execute('INSERT INTO equipements_activites(numero_equipement, numero_activite) SELECT numero, numero_equipement FROM activites_temp GROUP BY numero')
+        c.execute("DROP TABLE IF EXISTS activites_temp")
 
 
     def commit(self):

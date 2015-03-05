@@ -38,6 +38,7 @@ print("Done")
 print("Writing activities to the database...", end=" ")
 for elem in rj.result:
     database.insertActivity(elem)
+database.writeActivities()
 database.commit()
 print("Done")
 
