@@ -97,5 +97,68 @@ class WebManager(object):
 
         return html
 
+
+    @cherrypy.expose
+    def show_installation(self, number):
+        """
+        Shows the installation which has the given number from the database
+        """
+        html = self.add_HTML_header('Installation ' + number)
+        database = Database('data/database.db')
+        inst = database.read_installation(number)
+        html += '<table>\n<tr><th>Numéro</th><th>Nom</th><th>Adresse</th><th>Code postal</th><th>Ville</th><th>Latitude</th><th>Longitude</th></tr>\n'
+
+        try:
+            html += '<tr><td>' + str(inst.number) + '</td><td>' + inst.name + '</td><td>' + inst.address + '</td><td>' + str(inst.zip_code) + '</td><td>' + inst.city + '</td><td>' + str(inst.latitude) + '</td><td>' + str(inst.longitude) + '</td></tr>\n'
+        except AttributeError:
+            html = self.add_HTML_header('Installation non trouvée') + inst
+
+        html += '</table>\n'
+        html += self.add_HTML_footer()
+
+        return html
+
+
+    @cherrypy.expose
+    def show_equipment(self, number):
+        """
+        Shows the equipment which has the given number from the database
+        """
+        html = self.add_HTML_header('Équipement ' + number)
+        database = Database('data/database.db')
+        equip = database.read_equipment(number)
+        html += '<table>\n<tr><th>Numéro</th><th>Nom</th><th>Numéro d\'installation</th></tr>\n'
+
+        try:
+            html += '<tr><td>' + str(equip.number) + '</td><td>' + equip.name + '</td><td>' + str(equip.installation_number) + '</td></tr>\n'
+        except AttributeError:
+            html = self.add_HTML_header('Équipement non trouvé') + equip
+
+        html += '</table>\n'
+        html += self.add_HTML_footer()
+
+        return html
+
+
+    @cherrypy.expose
+    def show_activity(self, number):
+        """
+        Shows the activity which has the given number from the database
+        """
+        html = self.add_HTML_header('Activité ' + number)
+        database = Database('data/database.db')
+        activ = database.read_activity(number)
+        html += '<table>\n<tr><th>Numéro</th><th>Nom</th><th>Numéro d\'équipement</th></tr>\n'
+
+        try:
+            html += '<tr><td>' + str(activ.number) + '</td><td>' + activ.name + '</td><td>' + str(activ.equipment_number) + '</td></tr>\n'
+        except AttributeError:
+            html = self.add_HTML_header('Activité non trouvée') + activ
+
+        html += '</table>\n'
+        html += self.add_HTML_footer()
+
+        return html
+
  
 cherrypy.quickstart(WebManager()) 

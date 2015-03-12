@@ -94,6 +94,22 @@ class Database:
         return installations
 
 
+    def read_installation(self, number):
+        """
+        Reads the installation which has the given number from the 'installations' table
+        """
+        c = self.conn.cursor()
+        c.execute('SELECT * FROM installations WHERE numero = :numero', {'numero':number})
+        row = c.fetchone()
+
+        try:
+            installation = Installation(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
+        except TypeError:
+            return '<h2>Aucune installation ne correspond à ce numéro</h2>'
+
+        return installation
+
+
     def read_equipments(self):
         """
         Reads all the equipments from the 'equipements' table
@@ -109,6 +125,22 @@ class Database:
         return equipments
 
 
+    def read_equipment(self, number):
+        """
+        Reads the equipment which has the given number from the 'equipments' table
+        """
+        c = self.conn.cursor()
+        c.execute('SELECT * FROM equipements WHERE numero = :numero', {'numero':number})
+        row = c.fetchone()
+
+        try:
+            equipment = Equipment(row[0], row[1], row[2])
+        except TypeError:
+            return '<h2>Aucun équipement ne correspond à ce numéro</h2>'
+
+        return equipment
+
+
     def read_activities(self):
         """
         Reads all the activities from the 'activites' table
@@ -122,6 +154,22 @@ class Database:
             activities.append(Activity(row[0], row[1], row[2]))
 
         return activities
+
+
+    def read_activity(self, number):
+        """
+        Reads the activity which has the given number from the 'activites' table
+        """
+        c = self.conn.cursor()
+        c.execute('SELECT ac.numero, ac.nom, aceq.numero_equipement FROM activites ac, equipements_activites aceq WHERE ac.numero = aceq.numero_activite AND ac.numero = :numero', {'numero':number})
+        row = c.fetchone()
+
+        try:
+            activity = Activity(row[0], row[1], row[2])
+        except TypeError:
+            return '<h2>Aucune activité ne correspond à ce numéro</h2>'
+
+        return activity
 
 
     def commit(self):
