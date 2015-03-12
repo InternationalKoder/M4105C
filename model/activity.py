@@ -7,7 +7,7 @@ Model for an activity
 
 class Activity:
 
-    def __init__(self, number, name, numberEquipment):
+    def __init__(self, number, name, equipment_number):
         self.number = number
         self.name = name
-        self.numberEquipment = numberEquipment
+        self.equipment_number = equipment_number

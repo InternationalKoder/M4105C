@@ -16,7 +16,7 @@ class ReadJSON:
         self.result = []
 
 
-    def readActivities(self, path):
+    def read_activities(self, path):
         file = open(path)
         data = json.load(file)
 
@@ -24,7 +24,7 @@ class ReadJSON:
             self.result.append(Activity(line["ActCode"], line["ActLib"], line["EquipementId"]))
 
 
-    def readEquipments(self, path):
+    def read_equipments(self, path):
         file = open(path)
         data = json.load(file)
 
@@ -32,7 +32,7 @@ class ReadJSON:
             self.result.append(Equipment(line["EquipementId"], line["EquNom"], line["InsNumeroInstall"]))
 
 
-    def readInstallations(self, path):
+    def read_installations(self, path):
         file = open(path)
         data = json.load(file)
 

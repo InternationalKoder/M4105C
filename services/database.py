@@ -7,6 +7,8 @@ This class can be used to create a database and to do operations on it
 
 import sqlite3
 from model.installation import Installation
+from model.equipment import Equipment
+from model.activity import Activity
 
 class Database:
 
@@ -15,7 +17,7 @@ class Database:
         self.path = path
         
 
-    def createNew(self):
+    def create_new(self):
         """
         Creates a new database to the path given in the constructor
         """
@@ -39,45 +41,45 @@ class Database:
         self.commit()
 
 
-    def insertInstallation(self, inst):
+    def insert_installation(self, inst):
         """
         Inserts an installation in the 'installations' table
         """
         c = self.conn.cursor()
-        c.execute('INSERT INTO installations VALUES(:number, :name, :address, :zipCode, :city, :latitude, :longitude)',
-                  {'number':inst.number, 'name':inst.name, 'address':inst.address, 'zipCode':inst.zipCode, 'city':inst.city, 'latitude':inst.latitude, 'longitude':inst.longitude})
+        c.execute('INSERT INTO installations VALUES(:number, :name, :address, :zip_code, :city, :latitude, :longitude)',
+                  {'number':inst.number, 'name':inst.name, 'address':inst.address, 'zip_code':inst.zip_code, 'city':inst.city, 'latitude':inst.latitude, 'longitude':inst.longitude})
 
 
-    def insertEquipment(self, equip):
+    def insert_equipment(self, equip):
         """
         Inserts an equipment in the 'equipements' table
         """
         c = self.conn.cursor()
         c.execute('INSERT INTO equipements VALUES(:number, :name, :installationNumber)',
-                  {'number':equip.number, 'name':equip.name, 'installationNumber':equip.installationNumber})
+                  {'number':equip.number, 'name':equip.name, 'installationNumber':equip.installation_number})
 
 
-    def insertActivity(self, activ):
+    def insert_activity(self, activ):
         """
         Inserts an activity in the 'activites_temp' table
         You must call this method for all the lines you want to insert, and then call the 'writeActivities' method to finish the insertion
         """
         c = self.conn.cursor()
         c.execute('INSERT INTO activites_temp VALUES(:number, :name, :numberEquipment)',
-                  {'number':activ.number, 'name':activ.name, 'numberEquipment':activ.numberEquipment})
+                  {'number':activ.number, 'name':activ.name, 'numberEquipment':activ.equipment_number})
 
 
-    def writeActivities(self):
+    def write_activities(self):
         """
         Writes all the activities from 'activites_temp' to 'activites'
         """
         c = self.conn.cursor()
         c.execute('INSERT INTO activites(numero, nom) SELECT numero, nom FROM activites_temp GROUP BY numero')
-        c.execute('INSERT INTO equipements_activites(numero_equipement, numero_activite) SELECT numero, numero_equipement FROM activites_temp GROUP BY numero')
+        c.execute('INSERT INTO equipements_activites(numero_equipement, numero_activite) SELECT numero_equipement, numero FROM activites_temp GROUP BY numero')
         c.execute("DROP TABLE IF EXISTS activites_temp")
 
 
-    def readInstallations(self):
+    def read_installations(self):
         """
         Reads all the installations from the 'installations' table
         """
@@ -90,6 +92,36 @@ class Database:
             installations.append(Installation(row[0], row[1], row[2], row[3], row[4], row[5], row[6]))
 
         return installations
+
+
+    def read_equipments(self):
+        """
+        Reads all the equipments from the 'equipements' table
+        """
+        c = self.conn.cursor()
+        c.execute('SELECT * FROM equipements')
+        rows = c.fetchall()
+        equipments = []
+
+        for row in rows:
+            equipments.append(Equipment(row[0], row[1], row[2]))
+
+        return equipments
+
+
+    def read_activities(self):
+        """
+        Reads all the activities from the 'activites' table
+        """
+        c = self.conn.cursor()
+        c.execute('SELECT ac.numero, ac.nom, aceq.numero_equipement FROM activites ac, equipements_activites aceq WHERE ac.numero = aceq.numero_activite')
+        rows = c.fetchall()
+        activities = []
+
+        for row in rows:
+            activities.append(Activity(row[0], row[1], row[2]))
+
+        return activities
 
 
     def commit(self):
