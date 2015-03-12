@@ -6,6 +6,7 @@ Allows to read a JSON file
 """
 
 import json
+from progressbar import *
 from model.activity import Activity
 from model.installation import Installation
 from model.equipment import Equipment
@@ -20,7 +21,8 @@ class ReadJSON:
         file = open(path)
         data = json.load(file)
 
-        for line in data["data"]:
+        pbar = ProgressBar(widgets=['Reading activities JSON: ', Percentage(), ' ', ETA()])
+        for line in pbar(data["data"]):
             self.result.append(Activity(line["ActCode"], line["ActLib"], line["EquipementId"]))
 
 
@@ -28,7 +30,8 @@ class ReadJSON:
         file = open(path)
         data = json.load(file)
 
-        for line in data["data"]:
+        pbar = ProgressBar(widgets=['Reading equipments JSON: ', Percentage(), ' ', ETA()])
+        for line in pbar(data["data"]):
             self.result.append(Equipment(line["EquipementId"], line["EquNom"], line["InsNumeroInstall"]))
 
 
@@ -36,5 +39,6 @@ class ReadJSON:
         file = open(path)
         data = json.load(file)
 
-        for line in data["data"]:
+        pbar = ProgressBar(widgets=['Reading installations JSON: ', Percentage(), ' ', ETA()])
+        for line in pbar(data["data"]):
             self.result.append(Installation(line["InsNumeroInstall"], line["geo"]["name"], str(line["InsNoVoie"]) + " " + str(line["InsLibelleVoie"]), line["InsCodePostal"], line["ComLib"], line["Latitude"], line["Longitude"]))

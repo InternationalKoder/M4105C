@@ -5,6 +5,8 @@
 This program reads data from JSON files and writes the results to a SQLite database
 """
 
+from progressbar import *
+
 from services.readjson import ReadJSON
 from services.database import Database
 
@@ -18,41 +20,32 @@ database = Database("data/database.db")
 database.create_new()
 print("Done")
 
-print("Reading installations JSON...", end=" ")
 rj = ReadJSON()
 rj.read_installations("data/Installations.json")
-print("Done")
-print("Writing installations to the database...", end=" ")
 
-for elem in rj.result:
+pbar = ProgressBar(widgets=['Writing installations to the database: ', Percentage(), ' ', ETA()])
+for elem in pbar(rj.result):
     database.insert_installation(elem)
 database.commit()
-print("Done")
 
 
-print("Reading activities JSON...", end=" ")
 rj = ReadJSON()
 rj.read_activities("data/Activites.json")
-print("Done")
 
-print("Writing activities to the database...", end=" ")
-for elem in rj.result:
+pbar = ProgressBar(widgets=['Writing activities to the database: ', Percentage(), ' ', ETA()])
+for elem in pbar(rj.result):
     database.insert_activity(elem)
 database.write_activities()
 database.commit()
-print("Done")
 
 
-print("Reading equipments JSON...", end=" ")
 rj = ReadJSON()
 rj.read_equipments("data/Equipements.json")
-print("Done")
 
-print("Writing equipments to the database...", end=" ")
-for elem in rj.result:
+pbar = ProgressBar(widgets=['Writing equipments to the database: ', Percentage(), ' ', ETA()])
+for elem in pbar(rj.result):
     database.insert_equipment(elem)
 database.commit()
-print("Done")
 
 database.close()
 
