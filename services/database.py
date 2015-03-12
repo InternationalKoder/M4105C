@@ -6,6 +6,7 @@ This class can be used to create a database and to do operations on it
 """
 
 import sqlite3
+from model.installation import Installation
 
 class Database:
 
@@ -74,6 +75,21 @@ class Database:
         c.execute('INSERT INTO activites(numero, nom) SELECT numero, nom FROM activites_temp GROUP BY numero')
         c.execute('INSERT INTO equipements_activites(numero_equipement, numero_activite) SELECT numero, numero_equipement FROM activites_temp GROUP BY numero')
         c.execute("DROP TABLE IF EXISTS activites_temp")
+
+
+    def readInstallations(self):
+        """
+        Reads all the installations from the 'installations' table
+        """
+        c = self.conn.cursor()
+        c.execute('SELECT * FROM installations')
+        rows = c.fetchall()
+        installations = []
+
+        for row in rows:
+            installations.append(Installation(row[0], row[1], row[2], row[3], row[4], row[5], row[6]))
+
+        return installations
 
 
     def commit(self):

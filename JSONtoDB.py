@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-The main file which executes the program
+This program reads data from JSON files and writes the results to a SQLite database
 """
 
 from services.readjson import ReadJSON
