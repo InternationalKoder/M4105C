@@ -172,6 +172,26 @@ class Database:
         return activity
 
 
+    def get_infos(self, activity_name, city):
+        """
+        Gives all the installations, equipments and activities which match the given activity and city
+        """
+        c = self.conn.cursor()
+        c.execute("""SELECT i.numero, i.nom, e.numero, e.nom, a.numero, a.nom
+        FROM installations i
+        JOIN equipements e ON i.numero = e.numero_installation
+        JOIN equipements_activites ea ON e.numero = ea.numero_equipement
+        JOIN activites a ON ea.numero_activite = a.numero
+        WHERE LOWER(i.ville) = LOWER('""" + city + """') AND a.nom LIKE '%""" + activity_name + """%'""")
+        rows = c.fetchall()
+        results = []
+
+        for row in rows:
+            results.append((Installation(row[0], row[1]), Equipment(row[2], row[3], row[0]), Activity(row[4], row[5], row[2])))
+
+        return results
+
+
     def commit(self):
         self.conn.commit()
 

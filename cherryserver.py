@@ -34,7 +34,7 @@ class WebManager(object):
     def index(self):
         """
         Exposes the service at localhost:8080/
-        """
+        """     
         html = self.add_HTML_header('Accueil')
         html += '''<h1>Installations Sportives des Pays de la Loire</h1>\n
         <a href="show_installations">Voir les installations</a><br/>\n
@@ -154,6 +154,25 @@ class WebManager(object):
             html += '<tr><td>' + str(activ.number) + '</td><td>' + activ.name + '</td><td>' + str(activ.equipment_number) + '</td></tr>\n'
         except AttributeError:
             html = self.add_HTML_header('Activité non trouvée') + activ
+
+        html += '</table>\n'
+        html += self.add_HTML_footer()
+
+        return html
+
+
+    @cherrypy.expose
+    def find_infos(self, activity_name, city):
+        """
+        Shows all the installations, equipments and activities which match the given activity and city
+        """
+        html = self.add_HTML_header('Informations pour ' + activity_name + ' à ' + city)
+        database = Database('data/database.db')
+        infos = database.get_infos(activity_name, city)
+        html += '<table>\n<tr><th>Numéro d\'installation</th><th>Nom d\'installation</th><th>Numéro d\'équipement</th><th>Nom d\'équipement</th><th>Numéro d\'activité</th><th>Nom d\'activité</th></tr>\n'
+
+        for info in infos:
+            html += '<tr><td>' + str(info[0].number) + '</td><td>' + info[0].name + '</td><td>' + str(info[1].number) + '</td><td>' + info[1].name + '</td><td>' + str(info[2].number) + '</td><td>' + info[2].name + '</td></tr>\n'
 
         html += '</table>\n'
         html += self.add_HTML_footer()

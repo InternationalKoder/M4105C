@@ -2,4 +2,5 @@
 data/*
 cherrypy/*
 progressbar/*
+mako/*
 *~
