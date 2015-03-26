@@ -75,7 +75,7 @@ class Database:
         """
         c = self.conn.cursor()
         c.execute('INSERT INTO activites(numero, nom) SELECT numero, nom FROM activites_temp GROUP BY numero')
-        c.execute('INSERT INTO equipements_activites(numero_equipement, numero_activite) SELECT numero_equipement, numero FROM activites_temp GROUP BY numero')
+        c.execute('INSERT INTO equipements_activites(numero_equipement, numero_activite) SELECT numero_equipement, numero FROM activites_temp')
         c.execute("DROP TABLE IF EXISTS activites_temp")
 
 
@@ -146,12 +146,12 @@ class Database:
         Reads all the activities from the 'activites' table
         """
         c = self.conn.cursor()
-        c.execute('SELECT ac.numero, ac.nom, aceq.numero_equipement FROM activites ac, equipements_activites aceq WHERE ac.numero = aceq.numero_activite')
+        c.execute('SELECT * FROM activites')
         rows = c.fetchall()
         activities = []
 
         for row in rows:
-            activities.append(Activity(row[0], row[1], row[2]))
+            activities.append(Activity(row[0], row[1], 0))
 
         return activities
 
@@ -161,11 +161,11 @@ class Database:
         Reads the activity which has the given number from the 'activites' table
         """
         c = self.conn.cursor()
-        c.execute('SELECT ac.numero, ac.nom, aceq.numero_equipement FROM activites ac, equipements_activites aceq WHERE ac.numero = aceq.numero_activite AND ac.numero = :numero', {'numero':number})
+        c.execute('SELECT * FROM activites WHERE ac.numero = :numero', {'numero':number})
         row = c.fetchone()
 
         try:
-            activity = Activity(row[0], row[1], row[2])
+            activity = Activity(row[0], row[1], 0)
         except TypeError:
             return '<h2>Aucune activité ne correspond à ce numéro</h2>'
 

@@ -79,10 +79,10 @@ class WebManager(object):
         
  
         return view.render(
-            rows = [[item.number, item.name, item.equipment_number] for item in activities],
+            rows = [[item.number, item.name] for item in activities],
             pageTitle = "Activités",
             tableTitle = "Liste de toutes les activités",
-            ths = ["Numéro", "Nom", "Numéro d'équipement"]
+            ths = ["Numéro", "Nom"]
         ) 
 
 
@@ -151,17 +151,17 @@ class WebManager(object):
 
         try:
             render = view.render(
-                rows = [[activ.number, activ.name, activ.equipment_number]],
+                rows = [[activ.number, activ.name]],
                 pageTitle = "Activité " + number,
                 tableTitle = "Activité " + number,
-                ths = ["Numéro", "Nom", "Numéro d'équipement"]
+                ths = ["Numéro", "Nom"]
             )
         except AttributeError:
             render = view.render(
                 rows = [],
                 pageTitle = "Activité " + number,
                 tableTitle = "Activité " + number,
-                ths = ["Numéro", "Nom", "Numéro d'équipement"]
+                ths = ["Numéro", "Nom"]
             )
  
         return render
