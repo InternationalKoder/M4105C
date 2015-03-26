@@ -18,6 +18,9 @@ class ReadJSON:
 
 
     def read_activities(self, path):
+        """
+        Reads a JSON file which contains data for the activities
+        """
         file = open(path)
         data = json.load(file)
 
@@ -27,6 +30,9 @@ class ReadJSON:
 
 
     def read_equipments(self, path):
+        """
+        Reads a JSON file which contains data for the equipments
+        """
         file = open(path)
         data = json.load(file)
 
@@ -36,6 +42,9 @@ class ReadJSON:
 
 
     def read_installations(self, path):
+        """
+        Reads a JSON file which contains data for the installations
+        """
         file = open(path)
         data = json.load(file)
 

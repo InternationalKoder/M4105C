@@ -1,0 +1,44 @@
+## -*- coding: utf-8 -*-
+
+<%inherit file="base.html"/>
+
+% if len(rows) > 0:
+	<table>
+		<tr>
+			% for th in ths:
+				${makeTH(th)}
+			% endfor
+ 		</tr>
+ 
+	 	% if len(rows) > 1:
+	 		% for row in rows:
+	 			${makerow(row)}
+	 		% endfor
+	 	% else:
+			${makerow(rows[0])}
+		% endif
+ 	</table>
+% else:
+ 	<h3>Aucun résultat trouvé</h3>
+% endif
+ 
+<%def name="makerow(row)">
+	<tr>
+	% for name in row:
+		<td>${name}</td>\
+	% endfor
+	</tr>
+</%def>
+
+
+<%def name="makeTH(th)">
+	<th>${th}</th>
+</%def>
+
+<%block name="tableHead">
+	<h2>${tableTitle}</h2>
+</%block>
+
+<%block name="title">
+	${pageTitle}
+</%block>

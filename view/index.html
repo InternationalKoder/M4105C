@@ -1,0 +1,22 @@
+## -*- coding: utf-8 -*-
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Accueil</title>
+		<meta charset="utf-8"/>
+	</head>
+	<body>
+		<h1>Installations Sportives des Pays de la Loire</h1>
+		
+		<a href="show_installations">Voir les installations</a><br/>
+		<a href="show_equipments">Voir les équipements</a><br/>
+		<a href="show_activities">Voir les activités</a>
+		
+		<br/><br/>
+		
+		Intallation numéro : <input type="text" id="numInst" name="numInst"/> <input type="button" onclick="window.location.href='show_installation/' + document.getElementById('numInst').value;" value="Valider"/><br/>
+		Équipement numéro : <input type="text" id="numEquip" name="numEquip"/> <input type="button" onclick="window.location.href='show_equipment/' + document.getElementById('numEquip').value;" value="Valider"/><br/>
+		Activité numéro : <input type="text" id="numActiv" name="numActiv"/> <input type="button" onclick="window.location.href='show_activity/' + document.getElementById('numActiv').value;" value="Valider"/>
+	</body>
+</html> 
