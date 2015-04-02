@@ -65,8 +65,9 @@ class Database:
         You must call this method for all the lines you want to insert, and then call the 'writeActivities' method to finish the insertion
         """
         c = self.conn.cursor()
-        c.execute('INSERT INTO activites_temp VALUES(:number, :name, :numberEquipment)',
-                  {'number':activ.number, 'name':activ.name, 'numberEquipment':activ.equipment_number})
+        if activ.number != None:
+            c.execute('INSERT INTO activites_temp VALUES(:number, :name, :numberEquipment)',
+                      {'number':activ.number, 'name':activ.name, 'numberEquipment':activ.equipment_number})
 
 
     def write_activities(self):
