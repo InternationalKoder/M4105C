@@ -21,29 +21,27 @@ database.create_new()
 print("Done")
 
 rj = ReadJSON()
-rj.read_installations("data/Installations.json")
+installations = rj.read_installations("data/Installations.json")
 
 pbar = ProgressBar(widgets=['Writing installations to the database: ', Percentage(), ' ', ETA()])
-for elem in pbar(rj.result):
+for elem in pbar(installations):
     database.insert_installation(elem)
 database.commit()
 
 
-rj = ReadJSON()
-rj.read_activities("data/Activites.json")
+activities = rj.read_activities("data/Activites.json")
 
 pbar = ProgressBar(widgets=['Writing activities to the database: ', Percentage(), ' ', ETA()])
-for elem in pbar(rj.result):
+for elem in pbar(activities):
     database.insert_activity(elem)
 database.write_activities()
 database.commit()
 
 
-rj = ReadJSON()
-rj.read_equipments("data/Equipements.json")
+equipments = rj.read_equipments("data/Equipements.json")
 
 pbar = ProgressBar(widgets=['Writing equipments to the database: ', Percentage(), ' ', ETA()])
-for elem in pbar(rj.result):
+for elem in pbar(equipments):
     database.insert_equipment(elem)
 database.commit()
 

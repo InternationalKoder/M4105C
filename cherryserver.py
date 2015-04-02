@@ -172,7 +172,8 @@ class WebManager(object):
         """
         Shows all the installations, equipments and activities which match the given activity and city
         """
-        database = Database('data/database.db')
+        database = Database('data/database.db')            
+
         infos = database.get_infos(activity_name, city)
         view = Template(filename="view/template.html", lookup=lookup)
 
